@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true">
+	<springProperty name="SPRING_APP_NAME" scope="context" source="spring.application.name" defaultValue="application"/>
+	<springProperty name="ROOT_PATH" scope="context" source="logging.path"  defaultValue="/var/log/web/application"/>
+	<property name="MYFILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${level:-%5p} [${SPRING_APP_NAME:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}] ${PID:- } --- [%t] %C:%L : %msg%n"/>
+	 <include resource="org/springframework/boot/logging/logback/base.xml" />
+	<jmxConfigurator />
+	<appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${ROOT_PATH}/%d{yyyy-MM-dd}/${SPRING_APP_NAME}_%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+			<maxFileSize>200MB</maxFileSize>
+			<maxHistory>60</maxHistory>
+			<totalSizeCap>20GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<charset>utf-8</charset>
+			<pattern>${MYFILE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 打在console中的日志 -->
+	<appender name="INFO_LOCAL" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>utf-8</charset>
+			<pattern>${MYFILE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>512</queueSize>
+		<appender-ref ref="INFO_FILE" />
+	</appender>
+
+
+	<appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--添加 范围 过滤-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+			<pattern>${MYFILE_LOG_PATTERN}</pattern>
+		</encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${ROOT_PATH}/error_%d{yyyy-MM-dd}/${SPRING_APP_NAME}_%d{yyyy-MM-dd}.log</FileNamePattern>
+		</rollingPolicy>
+    </appender>
+
+<!--	<logger name="org.mitre.dsmiley.httpproxy" level="OFF" />-->
+<!--	<logger name="javax.activation" level="OFF" />-->
+<!--	<logger name="javax.mail" level="OFF" />-->
+<!--	<logger name="javax.xml.bind" level="OFF" />-->
+<!--	<logger name="ch.qos.logback" level="OFF" />-->
+<!--	<logger name="com.ryantenney" level="OFF" />-->
+<!--	<logger name="com.sun" level="OFF" />-->
+<!--	<logger name="com.zaxxer" level="OFF" />-->
+<!--	<logger name="net.sf.ehcache" level="OFF" />-->
+<!--	<logger name="org.apache" level="OFF" />-->
+<!--	<logger name="org.apache.catalina.startup.DigesterFactory" level="OFF" />-->
+<!--	<logger name="org.bson" level="OFF" />-->
+<!--	<logger name="org.hibernate" level="OFF" />-->
+<!--	<logger name="com.codahale.metrics" level="OFF" />-->
+<!--	<logger name="org.springframework.web" level="OFF" />-->
+<!--	<logger name="org.springframework.cache" level="OFF" />-->
+<!--	<logger name="org.thymeleaf" level="OFF" />-->
+<!--	<logger name="org.xnio" level="OFF" />-->
+<!--	<logger name="springfox" level="OFF" />-->
+<!--	<logger name="sun.rmi" level="OFF" />-->
+<!--	<logger name="liquibase" level="OFF" />-->
+<!--	<logger name="sun.rmi.transport" level="OFF" />-->
+<!--	<logger name="com.codahale.metrics.Slf4jReporter" level="OFF" />-->
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+
+	<root level="INFO">
+		<appender-ref ref="ASYNC" />
+		<appender-ref ref="INFO_LOCAL" />
+		<appender-ref ref="ERROR_FILE" />
+	</root>
+
+</configuration>
