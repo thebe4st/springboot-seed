@@ -63,6 +63,7 @@ public class Generator {
                     .addTablePrefix("t_", "c_") // 设置过滤表前缀
                     .serviceBuilder().formatServiceFileName("%sService") // 去掉I前缀
                     .entityBuilder().enableFileOverride() // 允许 entity 覆盖
+                    .enableLombok() // lombok
                 ;
             })
             .templateConfig(builder -> {
