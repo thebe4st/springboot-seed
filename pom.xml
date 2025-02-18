@@ -45,7 +45,7 @@
         <lombok.version>1.18.26</lombok.version>
         <guava.version>31.1-jre</guava.version>
         <pagehelper.starter.version>1.4.6</pagehelper.starter.version>
-        <mybatis.plus.starter.version>3.5.3.1</mybatis.plus.starter.version>
+        <mybatis.plus.starter.version>3.5.7</mybatis.plus.starter.version>
         <mysql.connector.version>8.0.32</mysql.connector.version>
         <hutool.version>5.8.18</hutool.version>
         <validation.version>2.0.1.Final</validation.version>
