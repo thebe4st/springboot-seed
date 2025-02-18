@@ -15,6 +15,7 @@ import com.zhongyuan.core.ProjectConstant;
 import java.sql.Types;
 import java.util.Collections;
 import java.util.HashMap;
+import org.apache.ibatis.annotations.Mapper;
 
 public class Generator {
     public static void main(String[] args) {
@@ -33,6 +34,7 @@ public class Generator {
                     .enableSwagger() // 开启 swagger 模式
                     .outputDir(outPutDir)// 指定输出目录
                     .disableOpenDir()
+                    .dateType(DateType.ONLY_DATE) // 有此选项表示数据库的日期类型使用 java.lang.Date，否则默认使用LocalDateTime
                 ;
             })
 
@@ -64,13 +66,10 @@ public class Generator {
                     .serviceBuilder().formatServiceFileName("%sService") // 去掉I前缀
                     .entityBuilder().enableFileOverride() // 允许 entity 覆盖
                     .enableLombok() // lombok
+                    .mapperBuilder()
+                    .mapperAnnotation(Mapper.class)
+                    .disableMapperXml() // 禁用xml并使用Mapper注解
                 ;
-            })
-            .templateConfig(builder -> {
-//                builder.controller(null);
-//                builder.service(null);
-//                builder.serviceImpl(null);
-                builder.xml(null);
             })
             .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
             .execute();
